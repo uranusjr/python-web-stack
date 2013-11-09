@@ -2,6 +2,7 @@
 # -*- coding: utf-8
 
 import os.path
+import pwd
 from nose.tools import ok_, eq_, with_setup
 from pywebstack import mksite, utils
 from . import *
@@ -23,6 +24,16 @@ def _create_tempdirs():
     utils.mkdir_p(utils.env.startup_script_dir)
 
 
+def _setup_permission_test():
+    test_dir = os.path.join(TEMP_DIR, 'permission_fix_test_dir')
+    test_file = os.path.join(test_dir, 'test')
+    os.makedirs(test_dir)
+    with open(test_file, 'w+'):
+        pass
+    os.chown(test_dir, 0, -1)
+    os.chown(test_file, 0, -1)
+
+
 @with_setup(setup=_create_tempdirs, teardown=cleanup_tempdir)
 def test_make_virtualenv():
     cl_args = MockedArguments(name=PROJECT_NAME)
@@ -33,6 +44,20 @@ def test_make_virtualenv():
     ok_(os.path.exists(
         utils.normalize(virtualenv_path, utils.env.project_container_name))
     )
+
+
+# This test does not actually work because we can't change ownership for
+# things in tempdir. Need to find another way to implement this test.
+@skipped
+@with_setup(setup=_setup_permission_test, teardown=cleanup_tempdir)
+def test_fix_permission():
+    test_dir = os.path.join(TEMP_DIR, 'permission_fix_test_dir')
+    test_file = os.path.join(test_dir, 'test')
+    mksite.fix_permission(test_dir)
+
+    get_owner_name = lambda p: pwd.getpwuid(os.stat(p).st_uid).pw_name
+    eq_(get_owner_name(test_dir), os.getlogin())
+    eq_(get_owner_name(test_file), os.getlogin())
 
 
 @with_setup(setup=_create_tempdirs, teardown=cleanup_tempdir)

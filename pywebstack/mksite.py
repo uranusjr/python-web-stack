@@ -4,6 +4,7 @@
 from __future__ import print_function
 import os
 import collections
+import pwd
 try:
     from configparser import ConfigParser
 except ImportError:     # Python 2 compatibility
@@ -21,6 +22,21 @@ def make_virtualenv(cl_args):
         run('virtualenv -q {name}'.format(name=name), quiet=True)
         with chdir(name):
             os.mkdir(env.project_container_name)
+
+
+def fix_permission(path):
+    """Correct owner for everything in (including) :path
+
+    This is effectively identical as running ``chown -R $LOGNAME`` on :path.
+    """
+    print('Fixing permission for {path}'.format(path=path))
+    uid = pwd.getpwnam(os.getlogin()).pw_uid
+    gid = -1    # TODO: Can we fix the group ID as well?
+    for root, dirs, files in os.walk(path):
+        for d in dirs:
+            os.chown(os.path.join(root, d), uid, gid)
+        for f in files:
+            os.chown(os.path.join(root, f), uid, gid)
 
 
 def add_nginx_conf(filename, content):
@@ -100,6 +116,9 @@ def setup(formula, cl_args):
 
     add_startup_conf(env.startup_script_prefix + cl_args.name, cmd)
     reload_nginx()
+
+    # Fix permission
+    fix_permission(current_virtualenv)
 
 
 def main():

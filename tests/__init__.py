@@ -4,13 +4,14 @@
 import os.path
 import shutil
 import tempfile
+from nose.plugins.skip import SkipTest
 from pywebstack import utils
 
 
 __all__ = [
     'ALL_FORMULAE_NAMES', 'PROJECT_NAME', 'TEMP_DIR',
     'MockedArguments',
-    'create_tempdir', 'cleanup_tempdir'
+    'skipped', 'create_tempdir', 'cleanup_tempdir'
 ]
 
 
@@ -35,3 +36,11 @@ def create_tempdir():
 
 def cleanup_tempdir():
     shutil.rmtree(TEMP_DIR)
+
+
+def skipped(f):
+    """Decorator for instructing nose to skip the decorated test"""
+    def _():
+        raise SkipTest
+    _.__name__ = f.__name__
+    return _
