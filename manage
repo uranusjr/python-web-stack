@@ -11,10 +11,14 @@ def main():
     except IndexError:
         sys.exit('manage takes at least one argument')
     if cmd == 'test':
-        os.system('nosetests --with-coverage --cover-package=pywebstack')
+        syscmd = (
+            'nosetests --with-coverage --cover-package=pywebstack '
+            '{args}'.format(args=' '.join(sys.argv[2:]))
+        )
+        os.system(syscmd)
     else:
-        os.system('sudo PYTHONPATH={dir} bin/{cmd} {args}'.format(
-            dir=os.path.dirname(__file__),
+        os.system('sudo PYTHONPATH={d} bin/{cmd} {args}'.format(
+            d=os.path.dirname(__file__),
             cmd=cmd,
             args=' '.join(sys.argv[2:])
         ))
