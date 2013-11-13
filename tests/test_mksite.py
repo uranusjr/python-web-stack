@@ -47,7 +47,7 @@ def test_make_virtualenv():
 
 
 # This test does not actually work because we can't change ownership for
-# things in tempdir. Need to find another way to implement this test.
+# things unless we are root. Need to find another way to implement this test.
 @skipped
 @with_setup(setup=_setup_permission_test, teardown=cleanup_tempdir)
 def test_fix_permission():
