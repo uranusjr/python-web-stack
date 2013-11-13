@@ -36,7 +36,7 @@ def _setup_permission_test():
 
 @with_setup(setup=_create_tempdirs, teardown=cleanup_tempdir)
 def test_make_virtualenv():
-    cl_args = MockedArguments(name=PROJECT_NAME)
+    cl_args = MockedArguments({'name': PROJECT_NAME})
     mksite.make_virtualenv(cl_args)
 
     virtualenv_path = utils.normalize(utils.env.virtualenv_root, PROJECT_NAME)

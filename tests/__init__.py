@@ -24,10 +24,15 @@ PROJECT_NAME = 'omega_directive'
 TEMP_DIR = os.path.join(tempfile.gettempdir(), 'pywebstack_test')
 
 
-class MockedArguments(object):
-    def __init__(self, **attributes):
-        for k in attributes:
-            setattr(self, k, attributes[k])
+class MockedArguments(dict):
+    def __getattr__(self, key):
+        try:
+            return self[key]
+        except KeyError:
+            raise AttributeError(key)
+
+    def __setattr__(self, key, value):
+        self[key] = value
 
 
 def create_tempdir():
