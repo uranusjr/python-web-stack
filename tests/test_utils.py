@@ -2,6 +2,8 @@
 # coding: utf-8
 
 import os.path
+import sys
+from StringIO import StringIO
 from nose.tools import eq_, assert_raises, assert_true, raises
 from pywebstack.formulae import Formula
 from pywebstack import utils
@@ -35,6 +37,19 @@ def test_chdir():
             assert_true(False)      # Shouldn't enter here
     except OSError:
         eq_(os.getcwd(), current)
+
+
+def test_run():
+    stdout = sys.stdout
+    try:
+        sys.stdout = StringIO()
+        eq_(utils.run('echo'), 0)
+        eq_(sys.stdout.getvalue(), 'Running echo\n')
+        sys.stdout = StringIO()
+        eq_(utils.run('echo', quiet=True), 0)
+        eq_(sys.stdout.getvalue(), '')
+    finally:
+        sys.stdout = stdout
 
 
 def test_get_formula_class():
