@@ -22,7 +22,7 @@ __all__ = [
 
 try:
     input = raw_input
-except AttributeError:  # No raw_input means we're in Python 3. Good! :)
+except NameError:   # No raw_input means we're in Python 3. Good! :)
     pass
 
 
