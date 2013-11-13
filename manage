@@ -5,19 +5,21 @@ import os
 import sys
 
 
+def run(cmd):
+    sys.exit(os.system(cmd))
+
+
 def main():
     try:
         cmd = sys.argv[1]
     except IndexError:
         sys.exit('manage takes at least one argument')
     if cmd == 'test':
-        syscmd = (
-            'nosetests --with-coverage --cover-package=pywebstack '
-            '{args}'.format(args=' '.join(sys.argv[2:]))
-        )
-        os.system(syscmd)
+        run('nosetests -c .noserc {extra_args}'.format(
+            extra_args=' '.join(sys.argv[2:])
+        ))
     else:
-        os.system('sudo PYTHONPATH={d} bin/{cmd} {args}'.format(
+        run('sudo PYTHONPATH={d} bin/{cmd} {args}'.format(
             d=os.path.dirname(__file__),
             cmd=cmd,
             args=' '.join(sys.argv[2:])

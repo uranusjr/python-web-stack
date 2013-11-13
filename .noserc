@@ -1,0 +1,6 @@
+[nosetests]
+with-tissue=1
+tissue-fail-on-error=1
+tissue-ignore=E124
+with-coverage=1
+cover-package=pywebstack

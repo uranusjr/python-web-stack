@@ -42,8 +42,8 @@ def test_make_virtualenv():
     virtualenv_path = utils.normalize(utils.env.virtualenv_root, PROJECT_NAME)
     ok_(os.path.exists(virtualenv_path))
     ok_(os.path.exists(
-        utils.normalize(virtualenv_path, utils.env.project_container_name))
-    )
+        utils.normalize(virtualenv_path, utils.env.project_container_name)
+    ))
 
 
 # This test does not actually work because we can't change ownership for
