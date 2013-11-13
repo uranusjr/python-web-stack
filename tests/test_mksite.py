@@ -3,7 +3,7 @@
 
 import os.path
 import pwd
-from nose.tools import ok_, eq_, with_setup
+from nose.tools import eq_, with_setup, assert_true
 from pywebstack import mksite, utils
 from . import *
 
@@ -40,8 +40,8 @@ def test_make_virtualenv():
     mksite.make_virtualenv(cl_args)
 
     virtualenv_path = utils.normalize(utils.env.virtualenv_root, PROJECT_NAME)
-    ok_(os.path.exists(virtualenv_path))
-    ok_(os.path.exists(
+    assert_true(os.path.exists(virtualenv_path))
+    assert_true(os.path.exists(
         utils.normalize(virtualenv_path, utils.env.project_container_name)
     ))
 
@@ -76,8 +76,8 @@ def test_add_nginx_conf():
 
     conf_path = os.path.join(utils.env.nginx_conf_dir, filename)
     link_path = os.path.join(utils.env.nginx_conf_link_dir, filename)
-    ok_(os.path.isfile(conf_path))
-    ok_(os.path.islink(link_path))
+    assert_true(os.path.isfile(conf_path))
+    assert_true(os.path.islink(link_path))
     eq_(os.path.realpath(link_path), os.path.realpath(conf_path))
 
     with open(conf_path, 'r') as f:

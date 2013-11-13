@@ -2,7 +2,7 @@
 # -*- coding: utf-8
 
 import os.path
-from nose.tools import ok_, with_setup
+from nose.tools import with_setup, assert_false
 from pywebstack import mksite, rmsite, utils
 from . import *
 
@@ -30,7 +30,7 @@ def test_rm_virtualenv():
     rmsite.rm_virtualenv(PROJECT_NAME)
 
     path = os.path.join(utils.env.virtualenv_root, PROJECT_NAME)
-    ok_(not os.path.exists(path))   # The virtualenv should *not* exist
+    assert_false(os.path.exists(path))  # The virtualenv should *not* exist
 
 
 if __name__ == '__main__':
