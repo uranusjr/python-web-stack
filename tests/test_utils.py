@@ -3,7 +3,11 @@
 
 import os.path
 import sys
-from StringIO import StringIO
+# StringIO must be tried first because Python 2 also has "io"
+try:
+    from StringIO import StringIO   # Python 2
+except ImportError:
+    from io import StringIO         # Python 3
 from nose.tools import eq_, assert_raises, assert_true, raises
 from pywebstack.formulae import Formula
 from pywebstack import utils
