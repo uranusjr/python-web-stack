@@ -100,7 +100,7 @@ def run(cmd, quiet=False):
     """Run a command with os.system"""
     if not quiet:
         print('Running {cmd}'.format(cmd=cmd))
-    os.system(cmd)
+    return os.system(cmd)
 
 
 def pip_install(*cmd):

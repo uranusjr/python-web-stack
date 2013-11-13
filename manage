@@ -6,7 +6,10 @@ import sys
 
 
 def run(cmd):
-    sys.exit(os.system(cmd))
+    code = os.system(cmd)
+    if code:
+        sys.exit(1)
+    sys.exit()
 
 
 def main():
