@@ -1,0 +1,8 @@
+#!/usr/bin/env python
+# -*- coding: utf-8
+
+import sys
+import pywebstack.config
+
+
+pywebstack.config.main(*sys.argv[1:])
