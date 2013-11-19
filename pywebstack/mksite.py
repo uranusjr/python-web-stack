@@ -31,7 +31,8 @@ def fix_permission(path):
     """
     print('Fixing permission for {path}'.format(path=path))
     uid = pwd.getpwnam(os.getlogin()).pw_uid
-    gid = -1    # TODO: Can we fix the group ID as well?
+    gid = pwd.getpwnam(os.getlogin()).pw_gid
+    os.chown(path, uid, gid)
     for root, dirs, files in os.walk(path):
         for d in dirs:
             os.chown(os.path.join(root, d), uid, gid)
@@ -90,6 +91,8 @@ def setup(formula, cl_args):
     config.set('Project', 'type', cl_args.type)
 
     # Run environment setup
+    if not os.path.exists(env.virtualenv_root):
+        os.makedirs(env.virtualenv_root)
     make_virtualenv(cl_args)
     pip_install('uwsgi')
 
