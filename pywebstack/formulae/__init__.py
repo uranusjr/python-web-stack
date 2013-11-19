@@ -24,9 +24,7 @@ server {
         self.env = env
         self.formula_name = formula_name
         self.template_dir = os.path.normpath(os.path.join(
-            os.path.dirname(__file__),
-            '..', '..', 'templates',
-            self.formula_name
+            env.template_root, self.formula_name
         ))
         self.project_name = project_name
         self.containing_dir = os.path.join(
