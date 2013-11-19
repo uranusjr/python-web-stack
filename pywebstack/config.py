@@ -3,9 +3,9 @@
 
 from __future__ import print_function
 try:
-    from configparser import ConfigParser
+    from configparser import ConfigParser, NoOptionError
 except ImportError:     # Python 2 compatibility
-    from ConfigParser import SafeConfigParser as ConfigParser
+    from ConfigParser import SafeConfigParser as ConfigParser, NoOptionError
 from .utils import normalize
 
 
@@ -29,7 +29,7 @@ def main(config_path, set_to=None):
     if set_to is None:      # Get config
         try:
             print(config.get(section, option))
-        except ConfigParser.NoOptionError:
+        except NoOptionError:
             print()
     else:
         if set_to:
