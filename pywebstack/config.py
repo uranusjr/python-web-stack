@@ -6,14 +6,13 @@ try:
     from configparser import ConfigParser, NoOptionError
 except ImportError:     # Python 2 compatibility
     from ConfigParser import SafeConfigParser as ConfigParser, NoOptionError
-from .utils import normalize
+from .utils import env
 
 
 def main(config_path, set_to=None):
-    config_file_path = normalize('config.cfg')
     config = ConfigParser()
     try:
-        with open(config_file_path) as f:
+        with open(env.config_file_path) as f:
             config.readfp(f)
     except IOError:     # File does not exist
         config.add_section('path')
@@ -36,7 +35,7 @@ def main(config_path, set_to=None):
             config.set(section, option, set_to)
         else:
             config.remove_option(section, option)
-        with open(config_file_path, 'w') as f:
+        with open(env.config_file_path, 'w') as f:
             config.write(f)
 
 

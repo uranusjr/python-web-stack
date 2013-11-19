@@ -9,6 +9,12 @@ import collections
 import contextlib
 import errno
 import importlib
+try:
+    from configparser import ConfigParser, NoSectionError, NoOptionError
+except ImportError:     # Python 2 compatibility
+    from ConfigParser import (
+        SafeConfigParser as ConfigParser, NoSectionError, NoOptionError
+    )
 
 
 __all__ = [
@@ -16,7 +22,7 @@ __all__ = [
     'UnrecognizedFormulaError',
     'normalize', 'chdir', 'mkdir_p', 'prompt', 'run', 'pip_install',
     'reload_nginx', 'parse_args', 'fill_opt_args', 'get_formula_class',
-    'get_formula'
+    'get_formula', 'get_config'
 ]
 
 
@@ -31,6 +37,37 @@ def normalize(*args):
     return os.path.normpath(os.path.join(os.path.dirname(__file__), *args))
 
 
+def get_config(section, option):
+    value = ''
+    config = ConfigParser()
+    try:
+        with open(normalize('config.cfg')) as f:
+            config.readfp(f)
+    except IOError:     # File does not exist
+        pass
+    try:
+        value = config.get(section, option)
+    except (NoSectionError, NoOptionError):
+        pass
+    return value
+
+
+def _get_virtualenv_root():
+    """Get the virtualenv root from system settings
+
+    The virtualenv root is determined with the following fallback order:
+
+    1. Option ``path.virtualenv`` from ``config.cfg``
+    2. ``.virtualenv`` directory inside he current login user's home directory
+       (compatible with virtualenvwrapper's default, for those who are too lazy
+       for settings).
+    """
+    return (
+        get_config('path', 'virtualenv') or
+        os.path.expanduser('~{user}/.virtualenv'.format(user=os.getlogin()))
+    )
+
+
 class _Environment(dict):
     def __getattr__(self, key):
         try:
@@ -43,7 +80,8 @@ class _Environment(dict):
 
 
 env = _Environment({
-    'virtualenv_root': normalize('..', 'envs'),
+    'config_file_path': normalize('config.cfg'),
+    'virtualenv_root': _get_virtualenv_root(),
     'template_root': normalize('templates'),
     'project_container_name': 'project',
     'project_config_file_name': '.pywebstack.conf',
