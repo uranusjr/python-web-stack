@@ -44,7 +44,7 @@ class _Environment(dict):
 
 env = _Environment({
     'virtualenv_root': normalize('..', 'envs'),
-    'template_root': normalize('..', 'templates'),
+    'template_root': normalize('templates'),
     'project_container_name': 'project',
     'project_config_file_name': '.pywebstack.conf',
     'nginx_conf_dir': '/etc/nginx/sites-available',
