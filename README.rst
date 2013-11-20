@@ -1,4 +1,5 @@
-.. image:: https://travis-ci.org/uranusjr/python-web-stack.png?branch=master   :target: https://travis-ci.org/uranusjr/python-web-stack
+.. image:: https://travis-ci.org/uranusjr/python-web-stack.png?branch=master
+   :target: https://travis-ci.org/uranusjr/python-web-stack
 
 =================
 Python Web Stack
