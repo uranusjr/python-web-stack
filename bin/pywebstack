@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+# -*- coding: utf-8
+
+import sys
+
+sys.argv.pop(0)     # Get rid of the executable name
+cmd = sys.argv[0]
+
+
+def print_usage():
+    # TODO: implement me
+    pass
+
+
+if cmd == 'mksite':
+    import pywebstack.mksite
+    pywebstack.mksite.main()
+elif cmd == 'rmsite':
+    import pywebstack.rmsite
+    pywebstack.rmsite.main()
+elif cmd == 'config':
+    import pywebstack.config
+    pywebstack.config.main()
+else:
+    print_usage()

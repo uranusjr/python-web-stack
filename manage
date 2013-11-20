@@ -3,13 +3,14 @@
 
 import os
 import sys
+import subprocess
 
 
-def run(cmd):
-    code = os.system(cmd)
-    if code:
-        sys.exit(1)
-    sys.exit()
+def run(args, env=None):
+    proc = subprocess.Popen(args, env=env)
+    proc.wait()
+    code = proc.returncode
+    sys.exit(code)
 
 
 def main():
@@ -18,15 +19,10 @@ def main():
     except IndexError:
         sys.exit('manage takes at least one argument')
     if cmd == 'test':
-        run('nosetests -c .noserc {extra_args}'.format(
-            extra_args=' '.join(sys.argv[2:])
-        ))
+        run(['nosetests', '-c', '.noserc'] + sys.argv[2:])
     else:
-        run('sudo PYTHONPATH={d} bin/{cmd} {args}'.format(
-            d=os.path.dirname(__file__),
-            cmd=cmd,
-            args=' '.join(sys.argv[2:])
-        ))
+        pythonpath = 'PYTHONPATH=' + os.path.dirname(__file__)
+        run(['sudo', pythonpath, 'bin/pywebstack'] + sys.argv[1:])
 
 
 if __name__ == '__main__':

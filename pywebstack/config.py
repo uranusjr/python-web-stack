@@ -2,20 +2,21 @@
 # -*- coding: utf-8
 
 from __future__ import print_function
+import sys
 try:
-    from configparser import ConfigParser, NoOptionError
+    from configparser import ConfigParser, NoOptionError, NoSectionError
 except ImportError:     # Python 2 compatibility
-    from ConfigParser import SafeConfigParser as ConfigParser, NoOptionError
+    from ConfigParser import (
+        SafeConfigParser as ConfigParser, NoOptionError, NoSectionError
+    )
 from .utils import env
 
 
-def main(config_path, set_to=None):
+def main():
+    config_path = sys.argv[1]
+    set_to = sys.argv[2] if len(sys.argv) > 2 else None
     config = ConfigParser()
-    try:
-        with open(env.config_file_path) as f:
-            config.readfp(f)
-    except IOError:     # File does not exist
-        config.add_section('path')
+    config.read(env.config_file_path)
 
     try:
         section, option = config_path.split('.')
@@ -28,13 +29,20 @@ def main(config_path, set_to=None):
     if set_to is None:      # Get config
         try:
             print(config.get(section, option))
-        except NoOptionError:
+        except (NoSectionError, NoOptionError):
             print()
-    else:
+    else:                   # Set config
         if set_to:
+            if not config.has_section(section):
+                config.add_section(section)
             config.set(section, option, set_to)
         else:
-            config.remove_option(section, option)
+            try:
+                config.remove_option(section, option)
+            except (NoSectionError, NoOptionError):
+                pass
+            if not config.items(section):
+                config.remove_section(section)
         with open(env.config_file_path, 'w') as f:
             config.write(f)
 
@@ -44,4 +52,4 @@ class ConfigArgumentError(Exception):
 
 
 if __name__ == '__main__':
-    main('')
+    main()
