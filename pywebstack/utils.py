@@ -57,13 +57,13 @@ def _get_virtualenv_root():
 
     The virtualenv root is determined with the following fallback order:
 
-    1. Option ``path.virtualenv`` from ``config.cfg``
+    1. Option ``virtualenv.root`` from ``config.cfg``
     2. ``.virtualenv`` directory inside he current login user's home directory
        (compatible with virtualenvwrapper's default, for those who are too lazy
        for settings).
     """
     return (
-        get_config('path', 'virtualenv') or
+        get_config('virtualenv', 'root') or
         os.path.expanduser('~{user}/.virtualenv'.format(user=os.getlogin()))
     )
 
