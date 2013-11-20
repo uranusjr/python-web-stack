@@ -2,7 +2,6 @@
 # -*- coding: utf-8
 
 import os
-import collections
 from ..utils import chdir
 
 
@@ -87,7 +86,7 @@ server {
             default value will be the return value by calling it with
             ``cl_args`` as the only argument.
         """
-        return collections.OrderedDict()
+        return {}
 
     def get_nginx_conf(self, cl_args):
         """Provide nginx configuration
