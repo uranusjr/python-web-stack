@@ -8,10 +8,12 @@ try:
     from StringIO import StringIO   # Python 2
 except ImportError:
     from io import StringIO         # Python 3
-from nose.tools import eq_, assert_raises, assert_true, raises
+from nose.tools import (
+    eq_, with_setup, assert_raises, assert_true, assert_false, raises
+)
 from pywebstack.formulae import Formula
 from pywebstack import utils
-from . import ALL_FORMULAE_NAMES
+from . import *
 
 
 def test_normalize():
@@ -41,6 +43,16 @@ def test_chdir():
             assert_true(False)      # Shouldn't enter here
     except OSError:
         eq_(os.getcwd(), current)
+
+
+@with_setup(teardown=cleanup_tempdir)
+def test_mkdir_p():
+    target = os.path.join(TEMP_DIR, 'create_me')
+    assert_false(os.path.exists(target))
+    utils.mkdir_p(target)
+    assert_true(os.path.exists(target))
+    utils.mkdir_p(target)   # Should not fail even if the target exists
+    assert_true(os.path.exists(target))
 
 
 def test_run():
