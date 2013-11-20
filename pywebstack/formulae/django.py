@@ -2,7 +2,6 @@
 # -*- coding: utf-8
 
 import os
-import re
 from ..utils import pip_install, run
 from . import Formula
 
@@ -47,19 +46,11 @@ class Django(Formula):
         os.mkdir(serve_dir)
         with open(settings, 'r') as f:
             s = f.read()
-            s = re.sub(
-                r'STATIC_ROOT.+?\n',
-                "STATIC_ROOT = '{p}'\n".format(
-                    p=os.path.join(serve_dir, 'static')
-                ),
-                s
+            s += "\nSTATIC_ROOT = '{p}'\n".format(
+                p=os.path.join(serve_dir, 'static')
             )
-            s = re.sub(
-                r'MEDIA_ROOT.+?\n',
-                "MEDIA_ROOT = '{p}'\n".format(
-                    p=os.path.join(serve_dir, 'media')
-                ),
-                s
+            s += "\nMEDIA_ROOT = '{p}'\n".format(
+                p=os.path.join(serve_dir, 'media')
             )
         with open(settings, 'w') as f:
             f.write(s)
