@@ -14,7 +14,8 @@ server {
     listen 80;
 
     location %(server_root)s {
-        proxy_pass http://127.0.0.1:%(bind_to)s;
+        uwsgi_pass 127.0.0.1:%(bind_to)s;
+        include uwsgi_params;
     }
 }
     """
